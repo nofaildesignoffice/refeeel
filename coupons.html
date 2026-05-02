@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>RE:FEEEL Admin — 쿠폰 관리</title><style>/* RE:FEEEL Admin — Design System */
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
+
+:root {
+  --black: #111111;
+  --gray-900: #1a1a1a;
+  --gray-800: #2a2a2a;
+  --gray-700: #3a3a3a;
+  --gray-600: #555555;
+  --gray-500: #777777;
+  --gray-400: #999999;
+  --gray-300: #bbbbbb;
+  --gray-200: #dddddd;
+  --gray-100: #eeeeee;
+  --gray-50: #f5f5f5;
+  --white: #ffffff;
+
+  /* Grade Colors */
+  --grade-s: #22c55e;
+  --grade-s-bg: #f0fdf4;
+  --grade-a: #3b82f6;
+  --grade-a-bg: #eff6ff;
+  --grade-b: #f59e0b;
+  --grade-b-bg: #fffbeb;
+  --grade-c: #ef4444;
+  --grade-c-bg: #fef2f2;
+
+  --accent: #111111;
+  --sidebar-w: 240px;
+  --header-h: 56px;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --transition: 0.15s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--gray-50);
+  color: var(--black);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  border-bottom: 1px solid var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-logo span { opacity: 0.5; font-weight: 400; font-size: 12px; }
+
+.sidebar-nav { padding: 12px 0; flex: 1; }
+
+.nav-section {
+  padding: 8px 20px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-500);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  color: var(--gray-400);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  color: var(--white);
+  background: var(--gray-900);
+}
+
+.nav-item.active {
+  color: var(--white);
+  background: var(--gray-900);
+  border-left-color: var(--white);
+}
+
+.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+/* MAIN CONTENT */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+}
+
+.header {
+  height: var(--header-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-date { font-size: 13px; color: var(--gray-500); }
+
+.content { padding: 28px 32px; }
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-500);
+  margin-bottom: 12px;
+}
+
+/* STAT CARDS */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.stat-change {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.stat-change.up { color: var(--grade-s); }
+.stat-change.down { color: var(--grade-c); }
+
+/* GRID LAYOUTS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-500);
+  border-bottom: 1px solid var(--gray-200);
+  background: var(--gray-50);
+}
+
+table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+table tr:hover { background: var(--gray-50); }
+
+/* BADGES */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-s { background: var(--grade-s-bg); color: var(--grade-s); }
+.badge-a { background: var(--grade-a-bg); color: var(--grade-a); }
+.badge-b { background: var(--grade-b-bg); color: var(--grade-b); }
+.badge-c { background: var(--grade-c-bg); color: var(--grade-c); }
+
+.badge-active { background: #f0fdf4; color: #16a34a; }
+.badge-hidden { background: var(--gray-100); color: var(--gray-500); }
+.badge-closed { background: #fef2f2; color: #dc2626; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--black);
+  color: var(--white);
+}
+.btn-primary:hover { background: var(--gray-800); }
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--gray-200);
+}
+.btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-300); }
+
+.btn-danger {
+  background: var(--white);
+  color: var(--grade-c);
+  border: 1px solid var(--gray-200);
+}
+.btn-danger:hover { background: var(--grade-c-bg); border-color: var(--grade-c); }
+
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+.btn-group { display: flex; gap: 8px; }
+
+/* TOGGLE */
+.toggle {
+  width: 40px;
+  height: 22px;
+  background: var(--gray-300);
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toggle.on { background: var(--black); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  background: var(--white);
+  border-radius: 50%;
+  top: 2px; left: 2px;
+  transition: var(--transition);
+}
+
+.toggle.on::after { left: 20px; }
+
+/* FORMS */
+.form-group { margin-bottom: 20px; }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--white);
+  transition: var(--transition);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+.form-textarea { resize: vertical; min-height: 80px; }
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--gray-200);
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.tab:hover { color: var(--black); }
+.tab.active { color: var(--black); border-bottom-color: var(--black); font-weight: 600; }
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar .form-select {
+  width: auto;
+  min-width: 140px;
+}
+
+.filter-bar .form-input {
+  width: auto;
+  min-width: 240px;
+}
+
+/* ALERT CARDS */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.alert-danger { background: var(--grade-c-bg); color: var(--grade-c); border: 1px solid #fecaca; }
+.alert-warning { background: var(--grade-b-bg); color: #b45309; border: 1px solid #fde68a; }
+.alert-success { background: var(--grade-s-bg); color: #15803d; border: 1px solid #bbf7d0; }
+
+/* SPARKLINE (fake) */
+.sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 32px;
+}
+
+.sparkline .bar {
+  width: 6px;
+  background: var(--gray-300);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+.sparkline .bar:hover { background: var(--black); }
+
+/* PROGRESS BAR */
+.progress {
+  height: 6px;
+  background: var(--gray-100);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--black);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* FILE UPLOAD */
+.file-upload {
+  border: 2px dashed var(--gray-200);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.file-upload:hover { border-color: var(--gray-400); background: var(--gray-50); }
+.file-upload .icon { font-size: 24px; margin-bottom: 8px; }
+.file-upload p { font-size: 13px; color: var(--gray-500); }
+
+/* CHAPTER LIST (Drag) */
+.chapter-list { list-style: none; }
+
+.chapter-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--white);
+  cursor: grab;
+}
+
+.chapter-item .drag { color: var(--gray-400); cursor: grab; }
+.chapter-item .ch-num { font-weight: 700; font-size: 12px; color: var(--gray-500); width: 40px; }
+.chapter-item input { flex: 1; border: none; font-size: 13px; font-family: inherit; outline: none; }
+.chapter-item .file-name { font-size: 12px; color: var(--gray-400); }
+
+/* CONDITION BUILDER */
+.condition-block {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.condition-block .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-500);
+  margin-bottom: 10px;
+}
+
+.condition-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.condition-row .form-select, .condition-row .form-input {
+  width: auto;
+  min-width: 120px;
+}
+
+/* SECTION DIVIDER */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--gray-400);
+}
+
+.empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+</style></head>
+<body>
+<div id="sidebar"></div>
+<div class="main"><div id="header"></div><div class="content">
+
+<div class="section-title">쿠폰 / 적립금 현황</div>
+<p style="color:var(--gray-500);font-size:13px;margin-bottom:24px;">아임웹에서 생성한 쿠폰 목록과 발급/사용 현황을 조회합니다. 쿠폰 생성은 아임웹 어드민에서 처리합니다.</p>
+
+<!-- TABS -->
+<div class="tabs" style="display:flex;gap:0;border-bottom:1px solid var(--gray-200);margin-bottom:24px;">
+  <button class="tab active" data-tab="tab-coupons" onclick="switchTab(this)">🎟️ 쿠폰 현황</button>
+  <button class="tab" data-tab="tab-points" onclick="switchTab(this)">💰 적립금 현황</button>
+</div>
+
+<!-- TAB 1: 쿠폰 현황 -->
+<div id="tab-coupons" class="tab-content">
+
+<!-- 요약 카드 -->
+<div class="stat-grid" style="margin-bottom:24px;">
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">전체 쿠폰 수</div>
+    <div style="font-size:28px;font-weight:700;">12</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">활성 쿠폰</div>
+    <div style="font-size:28px;font-weight:700;color:var(--grade-s);">8</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">총 발급 수</div>
+    <div style="font-size:28px;font-weight:700;">342</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">사용률</div>
+    <div style="font-size:28px;font-weight:700;">67%</div>
+  </div>
+</div>
+
+<!-- 쿠폰 목록 -->
+<div class="card" style="padding:0;">
+  <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gray-100);">
+    <div style="font-weight:600;">아임웹 쿠폰 목록</div>
+    <div class="filter-bar" style="margin-bottom:0;">
+      <select class="form-select" style="width:auto;min-width:120px;">
+        <option>전체 타입</option>
+        <option>지정발행</option>
+        <option>고객다운로드</option>
+        <option>자동발급</option>
+        <option>쿠폰코드생성</option>
+      </select>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>쿠폰명</th><th>타입</th><th>할인</th><th>유효기간</th><th>발급/사용</th><th>상태</th></tr></thead>
+    <tbody>
+      <tr style="cursor:pointer;" onclick="document.getElementById('coupon-detail-1').style.display=document.getElementById('coupon-detail-1').style.display==='none'?'':'none'">
+        <td><strong>새해 맞이 10% 할인</strong></td>
+        <td>지정발행</td>
+        <td>10%</td>
+        <td>2026-01-01 ~ 2026-06-30</td>
+        <td>28 / 18 <span style="color:var(--gray-400);font-size:12px;">(64%)</span></td>
+        <td><span class="badge badge-active">활성</span></td>
+      </tr>
+      <!-- 쿠폰별 발급 상세 (펼침) -->
+      <tr id="coupon-detail-1" style="display:none;">
+        <td colspan="6" style="background:var(--gray-50);padding:0;">
+          <div style="padding:12px 20px;">
+            <div style="font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:8px;">발급된 회원 목록</div>
+            <table style="font-size:13px;">
+              <thead><tr><th>회원</th><th>발급일</th><th>만료일</th><th>사용여부</th><th>사용일</th></tr></thead>
+              <tbody>
+                <tr><td>brand@gmail.com</td><td>2026-01-15</td><td>2026-06-30</td><td><span class="badge badge-active">사용</span></td><td>2026-02-03</td></tr>
+                <tr><td>kim@naver.com</td><td>2026-01-15</td><td>2026-06-30</td><td><span class="badge badge-hidden">미사용</span></td><td>—</td></tr>
+                <tr><td>park@gmail.com</td><td>2026-01-20</td><td>2026-06-30</td><td><span class="badge badge-active">사용</span></td><td>2026-03-12</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>브랜드 클래스 30% 할인</strong></td>
+        <td>고객다운로드</td>
+        <td>30%</td>
+        <td>2026-03-01 ~ 2026-05-31</td>
+        <td>156 / 112 <span style="color:var(--gray-400);font-size:12px;">(72%)</span></td>
+        <td><span class="badge badge-active">활성</span></td>
+      </tr>
+      <tr>
+        <td><strong>첫 구매 5,000원 할인</strong></td>
+        <td>자동발급</td>
+        <td>5,000원</td>
+        <td>기간 무제한</td>
+        <td>89 / 52 <span style="color:var(--gray-400);font-size:12px;">(58%)</span></td>
+        <td><span class="badge badge-active">활성</span></td>
+      </tr>
+      <tr>
+        <td><strong>연말 특별 20% 할인</strong></td>
+        <td>쿠폰코드생성</td>
+        <td>20%</td>
+        <td>2025-12-01 ~ 2025-12-31</td>
+        <td>69 / 45 <span style="color:var(--gray-400);font-size:12px;">(65%)</span></td>
+        <td><span class="badge badge-closed">만료</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- TAB 2: 적립금 현황 -->
+<div id="tab-points" class="tab-content" style="display:none;">
+
+<!-- 요약 카드 -->
+<div class="stat-grid" style="margin-bottom:24px;">
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">총 지급 적립금</div>
+    <div style="font-size:28px;font-weight:700;">1,250,000원</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">총 사용 적립금</div>
+    <div style="font-size:28px;font-weight:700;">890,000원</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">미사용 잔액 합계</div>
+    <div style="font-size:28px;font-weight:700;color:var(--grade-a);">360,000원</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">적립금 보유 회원 수</div>
+    <div style="font-size:28px;font-weight:700;">128명</div>
+  </div>
+</div>
+
+<!-- 적립금 이력 -->
+<div class="card" style="padding:0;">
+  <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gray-100);">
+    <div style="font-weight:600;">적립금 이력</div>
+    <div style="display:flex;gap:8px;">
+      <select class="form-select" style="width:auto;min-width:120px;">
+        <option>전체 타입</option>
+        <option>회원가입 지급</option>
+        <option>앱 설치 지급</option>
+        <option>주문 사용</option>
+        <option>주문 리워드</option>
+        <option>관리자 지급</option>
+      </select>
+      <input class="form-input" placeholder="회원 검색" style="width:180px;">
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>회원</th><th>타입</th><th>변동</th><th>사유</th><th>일시</th></tr></thead>
+    <tbody>
+      <tr><td>brand@gmail.com</td><td><span class="badge badge-active">주문 리워드</span></td><td style="color:var(--grade-s);font-weight:600;">+3,000</td><td>RE:KIT 구독 리워드</td><td>2026-05-01</td></tr>
+      <tr><td>kim@naver.com</td><td><span class="badge badge-hidden">주문 사용</span></td><td style="color:var(--grade-c);font-weight:600;">-5,000</td><td>브랜드 클래스 구매 시 사용</td><td>2026-04-28</td></tr>
+      <tr><td>park@gmail.com</td><td><span class="badge badge-active">회원가입 지급</span></td><td style="color:var(--grade-s);font-weight:600;">+1,000</td><td>회원가입 축하 적립금</td><td>2026-04-25</td></tr>
+      <tr><td>lee@gmail.com</td><td><span class="badge badge-active">관리자 지급</span></td><td style="color:var(--grade-s);font-weight:600;">+10,000</td><td>이벤트 참여 보상</td><td>2026-04-20</td></tr>
+      <tr><td>brand@gmail.com</td><td><span class="badge badge-hidden">사용 취소 반환</span></td><td style="color:var(--grade-s);font-weight:600;">+5,000</td><td>주문 취소로 인한 반환</td><td>2026-04-18</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+</div></div>
+<script>function renderSidebar(activePage) {
+  const nav = [
+    { section: '서비스' },
+    { id: 'dashboard', icon: '📊', label: '대시보드', href: 'index.html' },
+    { section: '콘텐츠' },
+    { id: 'rekit', icon: '📖', label: '리킷 관리', href: 'rekit.html' },
+    { id: 'classes', icon: '📚', label: '클래스 관리', href: 'classes.html' },
+    { section: '회원' },
+    { id: 'members', icon: '👥', label: '회원 조회', href: 'members.html' },
+    { id: 'member-detail', icon: '👤', label: '회원 상세', href: 'member-detail.html' },
+    { section: '마케팅' },
+    { id: 'push-triggers', icon: '⚡', label: '자동 트리거', href: 'push-triggers.html' },
+    { id: 'push-trigger-edit', icon: '🔧', label: '트리거 편집', href: 'push-trigger-edit.html' },
+    { id: 'push-campaign', icon: '📢', label: '캠페인 발송', href: 'push-campaign.html' },
+    { id: 'coupons', icon: '🎟️', label: '쿠폰/적립금', href: 'coupons.html' },
+    { section: 'AI' },
+    { id: 'nakta-ai', icon: '🤖', label: '낙타AI 관리', href: 'nakta-ai.html' },
+    { section: '시스템' },
+    { id: 'settings', icon: '⚙️', label: '설정', href: 'settings.html' },
+  ];
+  let html = '<div class="sidebar"><div class="sidebar-logo">RE:FEEEL <span>ADMIN</span></div><nav class="sidebar-nav">';
+  nav.forEach(item => {
+    if (item.section) { html += '<div class="nav-section">' + item.section + '</div>'; }
+    else { html += '<a href="' + item.href + '" class="nav-item' + (item.id === activePage ? ' active' : '') + '"><span class="icon">' + item.icon + '</span>' + item.label + '</a>'; }
+  });
+  html += '</nav></div>';
+  document.getElementById('sidebar').innerHTML = html;
+}
+function renderHeader(title) {
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
+  document.getElementById('header').innerHTML = '<div class="header"><div class="header-title">' + title + '</div><div class="header-right"><div class="header-date">' + dateStr + '</div></div></div>';
+}
+document.addEventListener('click', function(e) { if (e.target.classList.contains('toggle')) e.target.classList.toggle('on'); });
+</script>
+<script>renderSidebar('coupons'); renderHeader('쿠폰 관리');</script>
+</body></html>
+<script>renderSidebar("coupons"); renderHeader("쿠폰 / 적립금 현황");
+function switchTab(el) { document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); el.classList.add("active"); document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none"); document.getElementById(el.dataset.tab).style.display=""; }
+</script></body></html>

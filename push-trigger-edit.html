@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RE:FEEEL Admin — 트리거 편집</title>
+<style>/* RE:FEEEL Admin — Design System */
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
+
+:root {
+  --black: #111111;
+  --gray-900: #1a1a1a;
+  --gray-800: #2a2a2a;
+  --gray-700: #3a3a3a;
+  --gray-600: #555555;
+  --gray-500: #777777;
+  --gray-400: #999999;
+  --gray-300: #bbbbbb;
+  --gray-200: #dddddd;
+  --gray-100: #eeeeee;
+  --gray-50: #f5f5f5;
+  --white: #ffffff;
+
+  /* Grade Colors */
+  --grade-s: #22c55e;
+  --grade-s-bg: #f0fdf4;
+  --grade-a: #3b82f6;
+  --grade-a-bg: #eff6ff;
+  --grade-b: #f59e0b;
+  --grade-b-bg: #fffbeb;
+  --grade-c: #ef4444;
+  --grade-c-bg: #fef2f2;
+
+  --accent: #111111;
+  --sidebar-w: 240px;
+  --header-h: 56px;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --transition: 0.15s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--gray-50);
+  color: var(--black);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  border-bottom: 1px solid var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-logo span { opacity: 0.5; font-weight: 400; font-size: 12px; }
+
+.sidebar-nav { padding: 12px 0; flex: 1; }
+
+.nav-section {
+  padding: 8px 20px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-500);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  color: var(--gray-400);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  color: var(--white);
+  background: var(--gray-900);
+}
+
+.nav-item.active {
+  color: var(--white);
+  background: var(--gray-900);
+  border-left-color: var(--white);
+}
+
+.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+/* MAIN CONTENT */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+}
+
+.header {
+  height: var(--header-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-date { font-size: 13px; color: var(--gray-500); }
+
+.content { padding: 28px 32px; }
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-500);
+  margin-bottom: 12px;
+}
+
+/* STAT CARDS */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.stat-change {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.stat-change.up { color: var(--grade-s); }
+.stat-change.down { color: var(--grade-c); }
+
+/* GRID LAYOUTS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-500);
+  border-bottom: 1px solid var(--gray-200);
+  background: var(--gray-50);
+}
+
+table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+table tr:hover { background: var(--gray-50); }
+
+/* BADGES */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-s { background: var(--grade-s-bg); color: var(--grade-s); }
+.badge-a { background: var(--grade-a-bg); color: var(--grade-a); }
+.badge-b { background: var(--grade-b-bg); color: var(--grade-b); }
+.badge-c { background: var(--grade-c-bg); color: var(--grade-c); }
+
+.badge-active { background: #f0fdf4; color: #16a34a; }
+.badge-hidden { background: var(--gray-100); color: var(--gray-500); }
+.badge-closed { background: #fef2f2; color: #dc2626; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--black);
+  color: var(--white);
+}
+.btn-primary:hover { background: var(--gray-800); }
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--gray-200);
+}
+.btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-300); }
+
+.btn-danger {
+  background: var(--white);
+  color: var(--grade-c);
+  border: 1px solid var(--gray-200);
+}
+.btn-danger:hover { background: var(--grade-c-bg); border-color: var(--grade-c); }
+
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+.btn-group { display: flex; gap: 8px; }
+
+/* TOGGLE */
+.toggle {
+  width: 40px;
+  height: 22px;
+  background: var(--gray-300);
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toggle.on { background: var(--black); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  background: var(--white);
+  border-radius: 50%;
+  top: 2px; left: 2px;
+  transition: var(--transition);
+}
+
+.toggle.on::after { left: 20px; }
+
+/* FORMS */
+.form-group { margin-bottom: 20px; }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--white);
+  transition: var(--transition);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+.form-textarea { resize: vertical; min-height: 80px; }
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--gray-200);
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.tab:hover { color: var(--black); }
+.tab.active { color: var(--black); border-bottom-color: var(--black); font-weight: 600; }
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar .form-select {
+  width: auto;
+  min-width: 140px;
+}
+
+.filter-bar .form-input {
+  width: auto;
+  min-width: 240px;
+}
+
+/* ALERT CARDS */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.alert-danger { background: var(--grade-c-bg); color: var(--grade-c); border: 1px solid #fecaca; }
+.alert-warning { background: var(--grade-b-bg); color: #b45309; border: 1px solid #fde68a; }
+.alert-success { background: var(--grade-s-bg); color: #15803d; border: 1px solid #bbf7d0; }
+
+/* SPARKLINE (fake) */
+.sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 32px;
+}
+
+.sparkline .bar {
+  width: 6px;
+  background: var(--gray-300);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+.sparkline .bar:hover { background: var(--black); }
+
+/* PROGRESS BAR */
+.progress {
+  height: 6px;
+  background: var(--gray-100);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--black);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* FILE UPLOAD */
+.file-upload {
+  border: 2px dashed var(--gray-200);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.file-upload:hover { border-color: var(--gray-400); background: var(--gray-50); }
+.file-upload .icon { font-size: 24px; margin-bottom: 8px; }
+.file-upload p { font-size: 13px; color: var(--gray-500); }
+
+/* CHAPTER LIST (Drag) */
+.chapter-list { list-style: none; }
+
+.chapter-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--white);
+  cursor: grab;
+}
+
+.chapter-item .drag { color: var(--gray-400); cursor: grab; }
+.chapter-item .ch-num { font-weight: 700; font-size: 12px; color: var(--gray-500); width: 40px; }
+.chapter-item input { flex: 1; border: none; font-size: 13px; font-family: inherit; outline: none; }
+.chapter-item .file-name { font-size: 12px; color: var(--gray-400); }
+
+/* CONDITION BUILDER */
+.condition-block {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.condition-block .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-500);
+  margin-bottom: 10px;
+}
+
+.condition-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.condition-row .form-select, .condition-row .form-input {
+  width: auto;
+  min-width: 120px;
+}
+
+/* SECTION DIVIDER */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--gray-400);
+}
+
+.empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+<style>
+.condition-block{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.condition-block .label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-500);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.condition-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.condition-row .form-select,.condition-row .form-input{width:auto;min-width:100px}
+.rule-card{border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:8px;background:var(--white);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rule-card .remove{color:var(--gray-400);cursor:pointer;margin-left:auto;font-size:16px}
+.rule-card .remove:hover{color:var(--grade-c)}
+.logic-badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;background:var(--gray-100);color:var(--gray-600);cursor:pointer;user-select:none}
+.logic-badge:hover{background:var(--gray-200)}
+.section-divider{border-top:1px solid var(--gray-200);margin:24px 0;position:relative}
+.section-divider span{position:absolute;top:-10px;left:20px;background:var(--gray-50);padding:0 8px;font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div id="sidebar"></div>
+<div class="main">
+<div id="header"></div>
+<div class="content">
+
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+<a href="push-triggers.html" style="color:var(--gray-400);text-decoration:none;font-size:13px;">← 트리거 목록</a>
+</div>
+
+<div style="max-width:760px;">
+<div class="section-title">자동 트리거 편집</div>
+
+<!-- 트리거 기본 정보 -->
+<div class="card" style="margin-bottom:16px;">
+<div class="form-group"><div class="form-label">트리거 이름</div><input class="form-input" value="RE:KIT→클래스 업셀"></div>
+<div class="form-group"><div class="form-label">트리거 설명 (내부 메모)</div><input class="form-input" placeholder="이 트리거의 목적을 간단히 설명"></div>
+</div>
+
+<!-- 포함 대상 -->
+<div class="condition-block">
+<div class="label">
+<span>✅ 포함 대상 — 이 조건에 해당하는 유저에게 발송</span>
+<button class="btn btn-secondary btn-sm" onclick="addIncludeRule()">+ 조건 추가</button>
+</div>
+
+<div id="include-rules">
+<div class="rule-card">
+<select class="form-select" style="min-width:120px;">
+<option>구매한 상품</option>
+<option>미구매 상품</option>
+<option>구독 상태</option>
+<option>회원 등급</option>
+<option>회원 그룹</option>
+<option>가입 경과일</option>
+<option>마지막 접속</option>
+<option>리킷 완독 수</option>
+<option>클래스 진행률</option>
+</select>
+<select class="form-select" style="min-width:80px;">
+<option>포함</option>
+<option>미포함</option>
+<option>같음</option>
+<option>이상</option>
+<option>이하</option>
+</select>
+<select class="form-select" style="min-width:160px;">
+<option>RE:KIT</option>
+<option>브랜드 전략 클래스</option>
+<option>1:1 컨설팅</option>
+<option>브랜드 전략 가이드 라인</option>
+<option>RE:노션</option>
+<option>네이버 플레이스 리포트</option>
+<option>노션×인스타 자동화</option>
+<option>AI챗봇 완성판</option>
+</select>
+<span class="remove" onclick="this.closest('.rule-card').remove()">×</span>
+</div>
+
+<div style="padding:4px 0 4px 16px;"><span class="logic-badge" onclick="toggleLogic(this)">AND</span></div>
+
+<div class="rule-card">
+<select class="form-select" style="min-width:120px;">
+<option>구독 상태</option>
+<option>구매한 상품</option>
+<option>미구매 상품</option>
+<option>회원 등급</option>
+<option>회원 그룹</option>
+<option>가입 경과일</option>
+<option>마지막 접속</option>
+<option>리킷 완독 수</option>
+<option>클래스 진행률</option>
+</select>
+<select class="form-select" style="min-width:80px;">
+<option>같음</option>
+<option>포함</option>
+<option>미포함</option>
+</select>
+<select class="form-select" style="min-width:160px;">
+<option>활성 구독 중</option>
+<option>해지</option>
+<option>미구독</option>
+</select>
+<span class="remove" onclick="this.closest('.rule-card').remove()">×</span>
+</div>
+</div>
+</div>
+
+<!-- 제외 대상 -->
+<div class="condition-block">
+<div class="label">
+<span>🚫 제외 대상 — 이 조건에 해당하는 유저는 발송 제외</span>
+<button class="btn btn-secondary btn-sm" onclick="addExcludeRule()">+ 조건 추가</button>
+</div>
+
+<div id="exclude-rules">
+<div class="rule-card">
+<select class="form-select" style="min-width:120px;">
+<option>구매한 상품</option>
+<option>미구매 상품</option>
+<option>구독 상태</option>
+<option>회원 등급</option>
+<option>회원 그룹</option>
+<option>가입 경과일</option>
+<option>마지막 접속</option>
+<option>리킷 완독 수</option>
+<option>클래스 진행률</option>
+</select>
+<select class="form-select" style="min-width:80px;">
+<option>포함</option>
+<option>미포함</option>
+<option>같음</option>
+</select>
+<select class="form-select" style="min-width:160px;">
+<option>브랜드 전략 클래스</option>
+<option>RE:KIT</option>
+<option>1:1 컨설팅</option>
+<option>브랜드 전략 가이드 라인</option>
+<option>RE:노션</option>
+<option>네이버 플레이스 리포트</option>
+<option>노션×인스타 자동화</option>
+<option>AI챗봇 완성판</option>
+</select>
+<span class="remove" onclick="this.closest('.rule-card').remove()">×</span>
+</div>
+</div>
+<p style="font-size:11px;color:var(--gray-400);margin-top:8px;">예: 이미 브랜드 클래스를 구매한 유저는 업셀 푸시를 받지 않음</p>
+</div>
+
+<!-- 행동 트리거 조건 -->
+<div class="condition-block">
+<div class="label">
+<span>⚡ 행동 트리거 — 언제 발송할지</span>
+<button class="btn btn-secondary btn-sm" onclick="addBehaviorRule()">+ 조건 추가</button>
+</div>
+
+<div id="behavior-rules">
+<div class="rule-card">
+<select class="form-select" style="min-width:160px;" onchange="updateBehaviorInputs(this)">
+<option value="purchase_after">상품 구매 후 N일 경과</option>
+<option value="subscribe_after">구독 시작 후 N일 경과</option>
+<option value="complete_content">콘텐츠 완독 후 N일 경과</option>
+<option value="no_access">N일 이상 미접속</option>
+<option value="read_count">리킷 N개 이상 완독</option>
+<option value="class_complete">클래스 완주</option>
+<option value="milestone">완독 마일스톤 도달</option>
+<option value="coupon_expire">쿠폰 만료 N일 전</option>
+<option value="signup_after">가입 후 N일 경과</option>
+</select>
+<select class="form-select" style="min-width:140px;">
+<option>전체 상품</option>
+<option>RE:KIT</option>
+<option>브랜드 전략 클래스</option>
+<option>1:1 컨설팅</option>
+<option>브랜드 전략 가이드 라인</option>
+<option>RE:노션</option>
+<option>네이버 플레이스 리포트</option>
+<option>노션×인스타 자동화</option>
+<option>AI챗봇 완성판</option>
+</select>
+<input class="form-input" style="width:60px;text-align:center;" value="30">
+<span style="font-size:13px;color:var(--gray-500);">일</span>
+<span class="remove" onclick="this.closest('.rule-card').remove()">×</span>
+</div>
+
+<div style="padding:4px 0 4px 16px;"><span class="logic-badge" onclick="toggleLogic(this)">AND</span></div>
+
+<div class="rule-card">
+<select class="form-select" style="min-width:160px;">
+<option value="purchase_after">상품 구매 후 N일 경과</option>
+<option value="subscribe_after">구독 시작 후 N일 경과</option>
+<option value="complete_content">콘텐츠 완독 후 N일 경과</option>
+<option value="no_access" selected>N일 이상 미접속</option>
+<option value="read_count">리킷 N개 이상 완독</option>
+<option value="class_complete">클래스 완주</option>
+<option value="milestone">완독 마일스톤 도달</option>
+<option value="coupon_expire">쿠폰 만료 N일 전</option>
+<option value="signup_after">가입 후 N일 경과</option>
+</select>
+<span style="font-size:13px;color:var(--gray-500);min-width:30px;">—</span>
+<input class="form-input" style="width:60px;text-align:center;" value="7">
+<span style="font-size:13px;color:var(--gray-500);">일</span>
+<span class="remove" onclick="this.closest('.rule-card').remove()">×</span>
+</div>
+</div>
+<p style="font-size:11px;color:var(--gray-400);margin-top:8px;">여러 조건을 AND/OR로 조합할 수 있습니다. 상품은 신규 등록된 상품도 자동으로 선택 목록에 추가됩니다.</p>
+</div>
+
+<!-- 발송 메시지 -->
+<div class="card" style="margin-bottom:16px;">
+<div class="card-title">발송 메시지</div>
+<div class="form-group"><div class="form-label">제목</div><input class="form-input" value="리킷만으로 부족하다면?"></div>
+<div class="form-group"><div class="form-label">본문</div><textarea class="form-textarea" rows="3">브랜드 전략 클래스로 방향을 잡아보세요. 지금 30% 할인 쿠폰을 드려요.</textarea></div>
+<div class="form-group"><div class="form-label">딥링크 URL</div><input class="form-input" value="/program/brand-class"></div>
+</div>
+
+<!-- 쿠폰 안내 -->
+<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
+<div style="font-size:13px;color:var(--gray-600);">💡 쿠폰은 아임웹 어드민에서 특정 회원/그룹에게 발행합니다. 이 트리거에서는 푸시 메시지로 쿠폰 사용을 안내할 수 있습니다.</div>
+</div>
+
+<!-- 발송 설정 -->
+<div class="condition-block">
+<div class="label"><span>⏰ 발송 설정</span></div>
+<div class="condition-row">
+<span style="font-size:13px;min-width:100px;">발송 시간대:</span>
+<input class="form-input" style="width:80px;" value="09:00">
+<span style="font-size:13px;">~</span>
+<input class="form-input" style="width:80px;" value="10:00">
+</div>
+<div class="condition-row">
+<span style="font-size:13px;min-width:100px;">재발송:</span>
+<select class="form-select" style="min-width:200px;">
+<option>안 함 (1회만)</option>
+<option>7일 후 1회 재발송</option>
+<option>14일 후 1회 재발송</option>
+<option>7일 간격 최대 3회</option>
+</select>
+</div>
+<div class="condition-row">
+<span style="font-size:13px;min-width:100px;">중복 방지:</span>
+<select class="form-select" style="min-width:200px;">
+<option>같은 유저에게 이 트리거 1회만</option>
+<option>같은 유저에게 월 1회까지</option>
+<option>제한 없음</option>
+</select>
+</div>
+</div>
+
+<!-- 상태 & 버튼 -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;">
+<div style="display:flex;align-items:center;gap:10px;">
+<span style="font-size:13px;font-weight:600;">상태:</span>
+<div class="toggle on"></div>
+<span style="font-size:13px;color:var(--grade-s);">활성</span>
+</div>
+<div class="btn-group">
+<button class="btn btn-secondary">테스트 발송</button>
+<a href="push-triggers.html" class="btn btn-secondary">취소</a>
+<button class="btn btn-primary">저장</button>
+</div>
+</div>
+
+</div>
+</div></div>
+
+<script>function renderSidebar(activePage) {
+  const nav = [
+    { section: '서비스' },
+    { id: 'dashboard', icon: '📊', label: '대시보드', href: 'index.html' },
+    { section: '콘텐츠' },
+    { id: 'rekit', icon: '📖', label: '리킷 관리', href: 'rekit.html' },
+    { id: 'classes', icon: '📚', label: '클래스 관리', href: 'classes.html' },
+    { section: '회원' },
+    { id: 'members', icon: '👥', label: '회원 조회', href: 'members.html' },
+    { id: 'member-detail', icon: '👤', label: '회원 상세', href: 'member-detail.html' },
+    { section: '마케팅' },
+    { id: 'push-triggers', icon: '⚡', label: '자동 트리거', href: 'push-triggers.html' },
+    { id: 'push-trigger-edit', icon: '🔧', label: '트리거 편집', href: 'push-trigger-edit.html' },
+    { id: 'push-campaign', icon: '📢', label: '캠페인 발송', href: 'push-campaign.html' },
+    { id: 'coupons', icon: '🎟️', label: '쿠폰/적립금', href: 'coupons.html' },
+    { section: 'AI' },
+    { id: 'nakta-ai', icon: '🤖', label: '낙타AI 관리', href: 'nakta-ai.html' },
+    { section: '시스템' },
+    { id: 'settings', icon: '⚙️', label: '설정', href: 'settings.html' },
+  ];
+  let html = '<div class="sidebar"><div class="sidebar-logo">RE:FEEEL <span>ADMIN</span></div><nav class="sidebar-nav">';
+  nav.forEach(item => {
+    if (item.section) { html += '<div class="nav-section">' + item.section + '</div>'; }
+    else { html += '<a href="' + item.href + '" class="nav-item' + (item.id === activePage ? ' active' : '') + '"><span class="icon">' + item.icon + '</span>' + item.label + '</a>'; }
+  });
+  html += '</nav></div>';
+  document.getElementById('sidebar').innerHTML = html;
+}
+function renderHeader(title) {
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
+  document.getElementById('header').innerHTML = '<div class="header"><div class="header-title">' + title + '</div><div class="header-right"><div class="header-date">' + dateStr + '</div></div></div>';
+}
+document.addEventListener('click', function(e) { if (e.target.classList.contains('toggle')) e.target.classList.toggle('on'); });
+</script>
+<script>
+renderSidebar('push-trigger-edit'); renderHeader('트리거 편집');
+
+function toggleLogic(el) {
+  el.textContent = el.textContent === 'AND' ? 'OR' : 'AND';
+}
+
+function makeRuleCard(targetId) {
+  const card = document.createElement('div');
+  card.className = 'rule-card';
+  card.innerHTML = `
+    <select class="form-select" style="min-width:120px;">
+      <option>구매한 상품</option><option>미구매 상품</option><option>구독 상태</option>
+      <option>회원 등급</option><option>가입 경과일</option><option>마지막 접속</option>
+      <option>리킷 완독 수</option><option>클래스 진행률</option>
+    </select>
+    <select class="form-select" style="min-width:80px;">
+      <option>포함</option><option>미포함</option><option>같음</option><option>이상</option><option>이하</option>
+    </select>
+    <select class="form-select" style="min-width:160px;">
+      <option>RE:KIT</option><option>브랜드 전략 클래스</option><option>1:1 컨설팅</option>
+      <option>브랜드 전략 가이드 라인</option><option>RE:노션</option><option>네이버 플레이스 리포트</option>
+      <option>노션×인스타 자동화</option><option>AI챗봇 완성판</option>
+    </select>
+    <span class="remove" onclick="this.closest('.rule-card').remove()">×</span>`;
+
+  const logic = document.createElement('div');
+  logic.style.padding = '4px 0 4px 16px';
+  logic.innerHTML = '<span class="logic-badge" onclick="toggleLogic(this)">AND</span>';
+
+  const target = document.getElementById(targetId);
+  target.appendChild(logic);
+  target.appendChild(card);
+}
+
+function addIncludeRule() { makeRuleCard('include-rules'); }
+function addExcludeRule() { makeRuleCard('exclude-rules'); }
+
+function addBehaviorRule() {
+  const card = document.createElement('div');
+  card.className = 'rule-card';
+  card.innerHTML = `
+    <select class="form-select" style="min-width:160px;">
+      <option>상품 구매 후 N일 경과</option><option>구독 시작 후 N일 경과</option>
+      <option>콘텐츠 완독 후 N일 경과</option><option>N일 이상 미접속</option>
+      <option>리킷 N개 이상 완독</option><option>클래스 완주</option>
+      <option>완독 마일스톤 도달</option><option>쿠폰 만료 N일 전</option>
+      <option>가입 후 N일 경과</option>
+    </select>
+    <select class="form-select" style="min-width:140px;">
+      <option>전체 상품</option><option>RE:KIT</option><option>브랜드 전략 클래스</option>
+      <option>1:1 컨설팅</option><option>RE:노션</option>
+    </select>
+    <input class="form-input" style="width:60px;text-align:center;" placeholder="N">
+    <span style="font-size:13px;color:var(--gray-500);">일</span>
+    <span class="remove" onclick="this.closest('.rule-card').remove()">×</span>`;
+
+  const logic = document.createElement('div');
+  logic.style.padding = '4px 0 4px 16px';
+  logic.innerHTML = '<span class="logic-badge" onclick="toggleLogic(this)">AND</span>';
+
+  const target = document.getElementById('behavior-rules');
+  target.appendChild(logic);
+  target.appendChild(card);
+}
+</script>
+</body></html>
